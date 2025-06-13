@@ -1,4 +1,5 @@
-let countCanyons = 3;
+let countCanyons = 50;
+let currentXcanyon = 300;
 let countCoins = 20;
 let countTrees = innerWidth / 200;
 let countClouds = innerWidth / 300;
@@ -219,7 +220,7 @@ function restart() {
         checkCoin: function () {
             for (let i = 0; i < coins.length; i++) {
             const coin = coins[i];
-            if (dist(character.x, character.y, coin.x, coin.y) <= 15&&!coin.collected)  {
+            if (dist(character.x, character.y, coin.x, coin.y) <= 25&&!coin.collected)  {
                 score.value += 5;
                 coin.collected = true;
             }
@@ -351,23 +352,47 @@ function restart() {
         }
     };
 
-    for (let i = 0; i < countCanyons; i++) {
-        canyons.push({
-            x: random (150, width),
-            y: height - floor.height,
-            width: 150,
-            drawCanyon: function () {
-                noStroke();
-                fill(100);
-                rect(this.x, this.y, this.width, floor.height);
-            }
-        });
+   for (let i = 0; i < countCanyons; i++) {
+  let rand1 = 300;
+  let rand2 = 600;
+
+  if (currentXcanyon >= 6000) {
+    rand1 /= 5;
+    rand2 /= 5;
+  } else if (currentXcanyon >= 4500) {
+    rand1 /= 4;
+    rand2 /= 4;
+  } else if (currentXcanyon >= 3000) {
+    rand1 /= 3;
+    rand2 /= 3;
+  } else if (currentXcanyon >= 1500) {
+    rand1 /= 2;
+    rand2 /= 2;
+  }
+
+  const w      = random(100, 200);
+  const offset = random(rand1, rand2);
+
+  const canyon = {
+    x: currentXcanyon + offset,
+    y: height - floor.height,
+    width: w,
+    drawCanyon() {
+      noStroke();
+      fill(100);
+      rect(this.x, this.y, this.width, floor.height);
     }
+  };
+
+  canyons.push(canyon);
+
+  currentXcanyon = canyon.x + canyon.width;
+}
     
      for (let i = 0; i < countCoins; i++) {
         coins.push({
             x: random (150, 5000),
-            y: height - floor.height - 90,
+            y: height - floor.height - 90 + random(-50,80),
             collected: false,
             size: 30,
             drawCoins: function () {
@@ -384,14 +409,46 @@ function restart() {
     for (let i = 0; i < countClouds; i++) {
         clouds.push({
             x: i * 300,
-            y: 140,
+            y: 140 + random(-100,100),
             speed: 1,
+            type: Math.floor(random(1,4)),
+
             draw: function () {
+            switch (this.type){
+                case 1:   
+                    this.type1();
+                    break;
+                case 2:   
+                    this.type2();
+                    break;
+                case 3:   
+                    this.type3();
+                    break;
+                default:
+                    break;
+            }
+            },
+            
+             type1: function () {
                 noStroke();
                 fill(250);
                 circle(this.x, this.y, 100);
                 circle(this.x + 50, this.y - 10, 60);
                 ellipse(this.x + 20, this.y + 20, 175, 80);
+            },
+             type2: function () {
+                noStroke();
+                fill(190);
+                circle(this.x, this.y, 100);
+                circle(this.x + 50, this.y - 10, 50);
+                ellipse(this.x + 15, this.y + 15, 200, 70);
+            },
+             type3: function () {
+                noStroke();
+                fill(235);
+                circle(this.x, this.y, 75);
+                circle(this.x + 50, this.y - 10, 50 );
+                ellipse(this.x + 15, this.y + 15, 175, 60);
             },
             move: function () {
                 this.x += this.speed;
@@ -402,27 +459,68 @@ function restart() {
                 this.move();
             }
         });
+        
     }
 
     for (let i = 0; i < countTrees; i++) {
         trees.push({
-            x: i * 200,
+            x: i * 200 + random(100,175),
             y: height - 200,
+            type: Math.floor(random(1,5)),
 
             draw: function () {
-                noStroke();
-                fill("#674c0a");
-                triangle(this.x, this.y, this.x + 50, this.y, this.x + 25, this.y - 100);
-                fill("#86c343");
-                ellipse(this.x + 25, this.y - 100, 100, 150);
+            switch (this.type){
+                case 1:   
+                    this.type1();
+                    break;
+                case 2:   
+                    this.type2();
+                    break;
+                case 3:   
+                    this.type3();
+                    break;
+                case 4:   
+                    this.type4();
+                    break;
+                default:
+                    break;
+            }
             },
              move: function () {
                 if (this.x > width + 50) this.x = -50;
                 if (this.x < -50) this.x = width + 50;
             },
             update: function () {
-                this.draw();
-                this.move();
+               this.draw();
+               this.move();
+            },
+            type1: function () {
+                noStroke();
+                fill("#674c0a");
+                triangle(this.x, this.y, this.x + 50, this.y, this.x + 25, this.y - 100);
+                fill("#86c343");
+                ellipse(this.x + 25, this.y - 100, 100, 150);
+            },
+             type2: function () {
+                noStroke();
+                fill("#ab7c0a");
+                triangle(this.x, this.y, this.x + 50, this.y, this.x + 25, this.y - 100);
+                fill("#7edb18");
+                ellipse(this.x + 25, this.y - 125, 100, 150);
+            },
+            type3: function () {
+                noStroke();
+                fill("#533d08");
+                triangle(this.x, this.y, this.x + 95, this.y, this.x + 55, this.y - 175);
+                fill("#549909");
+                ellipse(this.x + 50, this.y - 175, 100, 175);
+            },
+            type4: function () {
+                noStroke();
+                fill("#946c0b");
+                triangle(this.x, this.y, this.x + 50, this.y, this.x + 25, this.y - 100);
+                fill("#59a308");
+                ellipse(this.x + 25, this.y - 125, 100, 175);
             }
         });
         
