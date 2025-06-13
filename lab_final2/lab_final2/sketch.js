@@ -3,7 +3,7 @@ let currentXcanyon = 300;
 let countCoins = 20;
 let countTrees = innerWidth / 200;
 let countClouds = innerWidth / 300;
-let countPlatforms = 3;
+let countPlatforms = countCanyons;
 let platforms = [];
 let canyons = [];
 let coins = [];
@@ -36,7 +36,8 @@ function restart() {
     canyons = [];
     clouds = [];
     coins = [];
-    trees = []
+    trees = [];
+    currentXcanyon = 0;
     character = {
         x: 100,
         y: 400,
